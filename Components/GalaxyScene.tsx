@@ -33,7 +33,7 @@ const GalaxyScene: React.FC = () => {
                     for (let i = 0; i < 10; i++) {
                         const texture = loader.load(imageUrls[i]);
                         const material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
-                        const geometry = new THREE.PlaneGeometry(2, 2); // Use PlaneGeometry for 2D images
+                        const geometry = new THREE.PlaneGeometry(1, 1); // Use PlaneGeometry for 2D images
                         const plane = new THREE.Mesh(geometry, material); // This is now a plane, not a cube
 
                         // Position the planes in a circle
