@@ -9,6 +9,7 @@ export default function Home() {
         <div className="m-4 flex flex-col gap-2">
           <SimpleLink url="/galaxy" name="/galaxy" />
           <SimpleLink url="/logic" name="/logic" />
+          <SimpleLink url="/note" name="/note" />
         </div>
       </div>
     </main>
