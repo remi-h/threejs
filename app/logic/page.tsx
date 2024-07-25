@@ -14,10 +14,6 @@ const parseVectors = (vectors: Vector[]) => {
   }));
 };
 
-const magnitude = (vector: number[]) => {
-  return Math.sqrt(vector.reduce((sum, val) => sum + val * val, 0));
-};
-
 const handleCalculate = (vectors: Vector[]) => {
   const parsedVectors = parseVectors(vectors);
   plotPolarChart(parsedVectors);
@@ -36,8 +32,6 @@ const plotPolarChart = (vectors: { name: string; values: number[] }[]) => {
 
   // Plot the center vector (first input)
   const centerVector = vectors[0];
-  const centerMagnitude = Math.sqrt(centerVector.values.reduce((sum, val) => sum + val * val, 0));
-  const centerRadius = (centerMagnitude / Math.max(...vectors.map(v => Math.sqrt(v.values.reduce((sum, val) => sum + val * val, 0))))) * maxRadius;
 
   ctx.beginPath();
   ctx.arc(centerX, centerY, 5, 0, 2 * Math.PI);
@@ -60,15 +54,15 @@ const plotPolarChart = (vectors: { name: string; values: number[] }[]) => {
     const y = centerY + radius * Math.sin(angle);
 
     ctx.beginPath();
-    ctx.arc(x, y, 5, 0, 2 * Math.PI);
-    ctx.fillStyle = `hsl(${index * (360 / (vectors.length - 1))}, 100%, 50%)`;
-    ctx.fill();
-    ctx.closePath();
-
-    ctx.beginPath();
     ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
     ctx.strokeStyle = '#e8e8e8';
     ctx.stroke();
+    ctx.closePath();
+
+    ctx.beginPath();
+    ctx.arc(x, y, 5, 0, 2 * Math.PI);
+    ctx.fillStyle = `hsl(${(index + 1) * (360 / (vectors.length + 1))}, 100%, 50%)`;
+    ctx.fill();
     ctx.closePath();
 
     // Plot the name of the vector
