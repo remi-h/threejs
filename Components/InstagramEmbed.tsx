@@ -35,3 +35,5 @@ const igUrls = [
     'https://www.instagram.com/p/CnvMo0NBPRV/',
     'https://www.instagram.com/p/C1HpbugCZGu/'
 ];
+
+export default InstagramEmbed;
