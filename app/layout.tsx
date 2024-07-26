@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import SimpleLink from "@/Components/SimpleLink";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,7 +17,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <div className="absolute top-0 left-0">
+          <div className="m-4 flex flex-col gap-2">
+            <SimpleLink url="../" name="../" />
+            <SimpleLink url="/galaxy" name="/galaxy" />
+            <SimpleLink url="/logic" name="/logic" />
+            <SimpleLink url="/note" name="/note" />
+            <SimpleLink url="/connect" name="/connect" />
+          </div>
+        </div>
+        {children}
+      </body>
     </html>
   );
 }

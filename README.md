@@ -2,20 +2,25 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-First, run the development server:
-
+First, run the development server:  
+and when installing something new
 ```bash
-npm install # when installing something new
+npm install
+# or
+npm i
+```
+then
+```bash
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-If you see the canvas duplicated, that's because of nextjs dev environment. It's fixed when you use 
+If you see the canvas duplicated, that's because of nextjs dev environment. It'll be fixed when you use 
 ```bash
-next build
-next start
+npm start
 ```
+instead of `npm run dev`
 
 ## Learn More
 To learn more about Next.js, take a look at the following resources:
