@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+// import word2vec from 'word2vec';
 
 type Vector = {
   name: string;
@@ -24,7 +25,7 @@ const plotPolarChart = (vectors: { name: string; values: number[] }[]) => {
   const ctx = canvas.getContext('2d');
   const centerX = canvas.width / 2;
   const centerY = canvas.height / 2;
-  const maxRadius = Math.min(centerX, centerY) - 30;
+  const maxRadius = Math.min(centerX, centerY) - 50;
 
   if (!ctx) return;
 
@@ -75,6 +76,22 @@ const plotPolarChart = (vectors: { name: string; values: number[] }[]) => {
 
 export default function Logic() {
   const [vectors, setVectors] = useState<Vector[]>([{ name: '', values: '' }]);
+
+  // // ----- W2V ----
+  // const [model, setModel] = useState<any>(null);
+
+  // useEffect(() => {
+  //   // Load the pre-trained Word2Vec model
+  //   word2vec.loadModel('/path/to/your/word2vec/model.txt', (error: any, loadedModel: any) => {
+  //     if (error) {
+  //       console.error('Error loading Word2Vec model:', error);
+  //     } else {
+  //       setModel(loadedModel);
+  //     }
+  //   });
+  // }, []);
+
+  // // ---------------
 
   const handleAddVector = () => {
     setVectors([...vectors, { name: '', values: '' }]);
