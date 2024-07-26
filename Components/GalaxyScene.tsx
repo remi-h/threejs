@@ -7,6 +7,22 @@ import { gsap } from 'gsap';
 const GalaxyScene: React.FC = () => {
     const containerRef = useRef<HTMLDivElement>(null);
     const cameraRef = useRef<PerspectiveCamera | null>(null);
+    const isDragging = useRef(false);
+    const initialMousePosition = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+
+    const resetCameraPosition = () => {
+        if (cameraRef.current) {
+            gsap.to(cameraRef.current.position, {
+                x: 0,
+                y: 0,
+                z: 8,
+                duration: 1,
+                onUpdate: () => {
+                    cameraRef.current?.lookAt(0, 0, 0);
+                }
+            });
+        }
+    };
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -64,33 +80,59 @@ const GalaxyScene: React.FC = () => {
                 requestAnimationFrame(renderScene);
             };
 
-            const onMouseClick = (event: MouseEvent) => {
-                const mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-                const mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
-                if (cameraRef.current) {
+            console.log('Component mounted');
+
+            const onMouseDown = (event: MouseEvent) => {
+                console.log('Mouse down:', event.clientX, event.clientY);
+                isDragging.current = true;
+                initialMousePosition.current = { x: event.clientX, y: event.clientY };
+            };
+            const onMouseMove = (event: MouseEvent) => {
+                if (isDragging.current && cameraRef.current) {
+                    const deltaX = (event.clientX - initialMousePosition.current.x) / window.innerWidth * 2;
+                    const deltaY = -(event.clientY - initialMousePosition.current.y) / window.innerHeight * 2;
+                    console.log('Mouse move:', deltaX, deltaY);
                     gsap.to(cameraRef.current.position, {
-                        x: mouseX * 10,
-                        y: mouseY * 10,
-                        duration: 1,
+                        x: deltaX * 10,
+                        y: deltaY * 10,
+                        duration: 0.1,
                         onUpdate: () => {
                             cameraRef.current?.lookAt(0, 0, 0);
                         }
                     });
                 }
             };
+            const onMouseUp = () => {
+                console.log('Mouse up');
+                isDragging.current = false;
+            };
 
-            window.addEventListener('click', onMouseClick);
+            if (containerRef.current) {
+                console.log('Adding event listeners');
+                containerRef.current.addEventListener('mousedown', onMouseDown);
+                window.addEventListener('mousemove', onMouseMove);
+                window.addEventListener('mouseup', onMouseUp);
+            }
+
             renderScene();
-
+            
             return () => {
-                window.removeEventListener('click', onMouseClick);
+                console.log('Component unmounted');
+                if (containerRef.current) {
+                    containerRef.current.removeEventListener('mousedown', onMouseDown);
+                }
+                window.removeEventListener('mousemove', onMouseMove);
+                window.removeEventListener('mouseup', onMouseUp);
             };
         }
     }, []);
-    
+
     return (
         <div>
             <div ref={containerRef} />
+            <div className='absolute bottom-0 left-0 bg-white'>
+                <button onClick={resetCameraPosition}>Reset Camera Position</button>
+            </div>
         </div>
     );
 };
