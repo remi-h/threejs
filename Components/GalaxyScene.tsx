@@ -119,6 +119,7 @@ const GalaxyScene: React.FC = () => {
             return () => {
                 console.log('Component unmounted');
                 if (containerRef.current) {
+                    // eslint-disable-next-line react-hooks/exhaustive-deps
                     containerRef.current.removeEventListener('mousedown', onMouseDown);
                 }
                 window.removeEventListener('mousemove', onMouseMove);
