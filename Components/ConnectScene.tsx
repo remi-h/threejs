@@ -3,8 +3,11 @@ import React, { useRef, useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { PerspectiveCamera } from 'three';
 import { gsap } from 'gsap';
+import { InstagramEmbed } from 'react-social-media-embed';
+import readVectors from '@/api/ReadVectors';
 
 const ConnectScene: React.FC = () => {
+    // GALAXY PART
     const containerRef = useRef<HTMLDivElement>(null);
     const cameraRef = useRef<PerspectiveCamera | null>(null);
     const isDragging = useRef(false);
@@ -126,6 +129,7 @@ const ConnectScene: React.FC = () => {
         }
     }, []);
 
+    // INPUT PART
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
         if (!isComposing) {
@@ -151,6 +155,31 @@ const ConnectScene: React.FC = () => {
         }
     };
     const displayValue = inputValue === '#' ? '' : inputValue;
+
+    // INSTAGRAM PART
+    interface Vector {
+        url: string;
+        keywords: string[];
+        values: {
+            [group: number]: number[];
+        };
+    }
+
+    const [vectors, setVectors] = useState<Vector[]>([]);
+
+    useEffect(() => {
+        const fetchVectors = async () => {
+            try {
+                const data = await readVectors();
+                setVectors(data);
+            } catch (error) {
+                console.error('Error fetching vectors:', error);
+            }
+        };
+
+        fetchVectors();
+    }, []);
+
     return (
         <div>
             <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
@@ -167,8 +196,18 @@ const ConnectScene: React.FC = () => {
             <div className='absolute bottom-0 left-0 bg-white m-auto'>
                 <button onClick={resetCameraPosition} className='p-1'>Reset Camera Position</button>
             </div>
+
+            <div className='flex flex-wrap'>
+                {vectors.map((vector, index) => (
+                    <div key={index}>
+                        <div>
+                            {index}
+                            <InstagramEmbed url={vector.url} width={328} />
+                        </div>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 };
-
 export default ConnectScene;

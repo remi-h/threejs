@@ -10,7 +10,7 @@ export type Vector = {
 export const readVectors = async (): Promise<Vector[]> => {
   const spreadsheetId = process.env.NEXT_PUBLIC_SHEET_ID;
   const apiKey = process.env.NEXT_PUBLIC_API_KEY;
-  const range = 'production!A2:BEX20';
+  const range = 'production!A2:BEX30';
 
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
 
