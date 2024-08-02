@@ -25,6 +25,7 @@ export default function RootLayout({
             <SimpleLink url="/logic" name="/logic" />
             <SimpleLink url="/note" name="/note" />
             <SimpleLink url="/connect" name="/connect" />
+            <SimpleLink url="/readsheet" name="/readsheet" />
           </div>
         </div>
         {children}

@@ -80,10 +80,9 @@ const ConnectScene: React.FC = () => {
                 requestAnimationFrame(renderScene);
             };
 
-            console.log('Component mounted');
+
 
             const onMouseDown = (event: MouseEvent) => {
-                console.log('Mouse down:', event.clientX, event.clientY);
                 isDragging.current = true;
                 initialMousePosition.current = { x: event.clientX, y: event.clientY };
             };
@@ -91,7 +90,7 @@ const ConnectScene: React.FC = () => {
                 if (isDragging.current && cameraRef.current) {
                     const deltaX = (event.clientX - initialMousePosition.current.x) / window.innerWidth * 2;
                     const deltaY = -(event.clientY - initialMousePosition.current.y) / window.innerHeight * 2;
-                    console.log('Mouse move:', deltaX, deltaY);
+
                     gsap.to(cameraRef.current.position, {
                         x: deltaX * 10,
                         y: deltaY * 10,
@@ -103,12 +102,10 @@ const ConnectScene: React.FC = () => {
                 }
             };
             const onMouseUp = () => {
-                console.log('Mouse up');
                 isDragging.current = false;
             };
 
             if (containerRef.current) {
-                console.log('Adding event listeners');
                 containerRef.current.addEventListener('mousedown', onMouseDown);
                 window.addEventListener('mousemove', onMouseMove);
                 window.addEventListener('mouseup', onMouseUp);
@@ -117,7 +114,6 @@ const ConnectScene: React.FC = () => {
             renderScene();
 
             return () => {
-                console.log('Component unmounted');
                 if (containerRef.current) {
                     // eslint-disable-next-line react-hooks/exhaustive-deps
                     containerRef.current.removeEventListener('mousedown', onMouseDown);
