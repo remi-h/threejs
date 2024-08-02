@@ -1,5 +1,5 @@
 'use client';
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { PerspectiveCamera } from 'three';
 import { gsap } from 'gsap';
@@ -9,6 +9,8 @@ const ConnectScene: React.FC = () => {
     const cameraRef = useRef<PerspectiveCamera | null>(null);
     const isDragging = useRef(false);
     const initialMousePosition = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+    const [inputValue, setInputValue] = useState('#');
+    const [isComposing, setIsComposing] = useState(false);
 
     const resetCameraPosition = () => {
         if (cameraRef.current) {
@@ -124,10 +126,42 @@ const ConnectScene: React.FC = () => {
         }
     }, []);
 
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const value = event.target.value;
+        if (!isComposing) {
+            if (!value.startsWith('#')) {
+                setInputValue('#' + value);
+            } else {
+                setInputValue(value);
+            }
+        } else {
+            setInputValue(value);
+        }
+    };
+    const handleCompositionStart = () => {
+        setIsComposing(true);
+    };
+    const handleCompositionEnd = (event: React.CompositionEvent<HTMLInputElement>) => {
+        setIsComposing(false);
+        const value = event.currentTarget.value;
+        if (!value.startsWith('#')) {
+            setInputValue('#' + value);
+        } else {
+            setInputValue(value);
+        }
+    };
+    const displayValue = inputValue === '#' ? '' : inputValue;
     return (
         <div>
             <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
-                <input type='text' placeholder='type a keyword...' className='p-1 bg-black text-center text-white focus:outline-none' />
+                <input type='text'
+                    value={displayValue}
+                    onChange={handleInputChange}
+                    onCompositionStart={handleCompositionStart}
+                    onCompositionEnd={handleCompositionEnd}
+                    placeholder='#キーワードを入力...'
+                    className='p-1 bg-black text-center text-white focus:outline-none'
+                />
             </div>
             <div ref={containerRef} />
             <div className='absolute bottom-0 left-0 bg-white m-auto'>
