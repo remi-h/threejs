@@ -1,5 +1,5 @@
 'use client';
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { PerspectiveCamera } from 'three';
 import { gsap } from 'gsap';
@@ -9,6 +9,8 @@ const GalaxyScene: React.FC = () => {
     const cameraRef = useRef<PerspectiveCamera | null>(null);
     const isDragging = useRef(false);
     const initialMousePosition = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+    const [inputValue, setInputValue] = useState('#');
+    const [isComposing, setIsComposing] = useState(false);
 
     const resetCameraPosition = () => {
         if (cameraRef.current) {
@@ -80,10 +82,9 @@ const GalaxyScene: React.FC = () => {
                 requestAnimationFrame(renderScene);
             };
 
-            console.log('Component mounted');
+
 
             const onMouseDown = (event: MouseEvent) => {
-                console.log('Mouse down:', event.clientX, event.clientY);
                 isDragging.current = true;
                 initialMousePosition.current = { x: event.clientX, y: event.clientY };
             };
@@ -91,7 +92,7 @@ const GalaxyScene: React.FC = () => {
                 if (isDragging.current && cameraRef.current) {
                     const deltaX = (event.clientX - initialMousePosition.current.x) / window.innerWidth * 2;
                     const deltaY = -(event.clientY - initialMousePosition.current.y) / window.innerHeight * 2;
-                    console.log('Mouse move:', deltaX, deltaY);
+
                     gsap.to(cameraRef.current.position, {
                         x: deltaX * 10,
                         y: deltaY * 10,
@@ -103,21 +104,18 @@ const GalaxyScene: React.FC = () => {
                 }
             };
             const onMouseUp = () => {
-                console.log('Mouse up');
                 isDragging.current = false;
             };
 
             if (containerRef.current) {
-                console.log('Adding event listeners');
                 containerRef.current.addEventListener('mousedown', onMouseDown);
                 window.addEventListener('mousemove', onMouseMove);
                 window.addEventListener('mouseup', onMouseUp);
             }
 
             renderScene();
-            
+
             return () => {
-                console.log('Component unmounted');
                 if (containerRef.current) {
                     // eslint-disable-next-line react-hooks/exhaustive-deps
                     containerRef.current.removeEventListener('mousedown', onMouseDown);
@@ -128,11 +126,46 @@ const GalaxyScene: React.FC = () => {
         }
     }, []);
 
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const value = event.target.value;
+        if (!isComposing) {
+            if (!value.startsWith('#')) {
+                setInputValue('#' + value);
+            } else {
+                setInputValue(value);
+            }
+        } else {
+            setInputValue(value);
+        }
+    };
+    const handleCompositionStart = () => {
+        setIsComposing(true);
+    };
+    const handleCompositionEnd = (event: React.CompositionEvent<HTMLInputElement>) => {
+        setIsComposing(false);
+        const value = event.currentTarget.value;
+        if (!value.startsWith('#')) {
+            setInputValue('#' + value);
+        } else {
+            setInputValue(value);
+        }
+    };
+    const displayValue = inputValue === '#' ? '' : inputValue;
     return (
         <div>
+            <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
+                <input type='text'
+                    value={displayValue}
+                    onChange={handleInputChange}
+                    onCompositionStart={handleCompositionStart}
+                    onCompositionEnd={handleCompositionEnd}
+                    placeholder='#キーワードを入力...'
+                    className='p-1 bg-black text-center text-white focus:outline-none'
+                />
+            </div>
             <div ref={containerRef} />
-            <div className='absolute bottom-0 left-0 bg-white'>
-                <button onClick={resetCameraPosition}>Reset Camera Position</button>
+            <div className='absolute bottom-0 left-0 bg-white m-auto'>
+                <button onClick={resetCameraPosition} className='p-1'>Reset Camera Position</button>
             </div>
         </div>
     );
