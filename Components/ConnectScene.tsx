@@ -156,7 +156,7 @@ const ConnectScene: React.FC = () => {
     };
     const displayValue = inputValue === '#' ? '' : inputValue;
 
-    // INSTAGRAM PART
+    // READSHEET FOR INSTAGRAM PART 
     interface Vector {
         url: string;
         keywords: string[];

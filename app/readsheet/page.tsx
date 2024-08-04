@@ -1,3 +1,6 @@
+// --- MEMO ---
+// WATCH OUT: Index starts from 0, but displaying 1 as the first. Group num starts from 1.
+
 'use client';
 import React, { useEffect, useState } from 'react';
 import readVectors from '@/api/ReadVectors';
@@ -34,20 +37,21 @@ const Readsheet: React.FC = () => {
     <main>
       <div className="m-auto max-w-4xl bg-gray-100 p-4">
         <h1>Data from the sheet: production</h1>
+        <button onClick={toggleVectors} className="p-2 bg-blue-500 text-white">
+          {showVectors ? 'Hide' : 'Show'} Vectors
+        </button>
         {vectors.map((vector, index) => (
           <div key={index} className="mb-4 p-2 border rounded bg-white">
-            <h2 className="font-bold">{index + 1} - Link: {vector.url}</h2>
+            <p className="font-semibold">{index + 1}</p>
+            <a href={vector.url} className='underline'>{vector.url}</a>
             <div className="mb-2">
-              <h3 className="font-semibold">Keywords:</h3>
+              <p>Keywords:</p>
               <p>{vector.keywords.join(', ')}</p>
             </div>
             <div>
-              <button onClick={toggleVectors} className="p-2 bg-blue-500 text-white">
-                {showVectors ? 'Hide' : 'Show'} Vectors
-              </button>
               {showVectors && Object.entries(vector.values).map(([group, groupValues]) => (
                 <div key={group} className="mb-2">
-                  <h4 className="font-semibold">Vectors for Keyword {group}:</h4>
+                  <p className="font-semibold">Vector for {index + 1}-{group}:</p>
                   <p>{groupValues.join(', ')}</p>
                 </div>
               ))}

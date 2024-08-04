@@ -1,6 +1,5 @@
 // READING SPREADSHEET DATA
 
-'use client';
 export type Vector = {
   url: string;
   keywords: string[];
